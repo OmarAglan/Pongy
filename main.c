@@ -1,35 +1,67 @@
 #include <stdio.h>
-#include <SDL.h>
+#include <stdbool.h>
+#include <SDL3/SDL.h>
 
 /**
  * @brief main - The main loop of the program.
- * 
+ *
  * @param argc - The number of arguments passed to the program.
  * @param argv - The arguments passed to the program.
- * 
+ *
  * @return int - 0 if the program runs successfully, 1 if not.
  */
-int main(int argc, char* argv[]) {
-    // Initialize the SDL library
-    SDL_Init(SDL_INIT_EVERYTHING);
+int main(int argc, char *argv[])
+{
+    // Initialize the SDL video subsystem
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf("SDL could not initialize Video Subsystem! SDL_Error: %s\n", SDL_GetError());
+        return 1;
+    }
+
     // Create a window with the name "Pongy"
-    SDL_Window *window = SDL_CreateWindow("Pongy",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,800,600,0);
-    // Get the surface of the window
-    SDL_Surface *screen = SDL_GetWindowSurface(window);
-    // Create player 1 and player 2's rectangles
-    const SDL_Rect player1Rect = {20, 30, 20, 70};
-    const SDL_Rect player2Rect = {760, 30, 20, 70};
-    // Create a color
-    const Uint32 color = 0xffffffff;
-    // Fill the rectangles with the color
-    SDL_FillRect(screen, &player1Rect, color);
-    SDL_FillRect(screen, &player2Rect, color);
-    // Update the window surface
-    SDL_UpdateWindowSurface(window);
-    // Pause for 5 seconds
-    SDL_Delay(5000);
-    // Quit the SDL library
+    SDL_Window *window = SDL_CreateWindow("Pongy", 800, 600, 0);
+    if (!window)
+    {
+        printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    // Create a renderer
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+    if (!renderer)
+    {
+        printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    // Main game loop
+    bool running = true;
+    while (running)
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_EVENT_QUIT)
+            {
+                running = false;
+            }
+        }
+
+        // Clear screen
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        // Update screen
+        SDL_RenderPresent(renderer);
+    }
+
+    // Cleanup
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     SDL_Quit();
-    // Return 0 if the program runs successfully
+
     return 0;
 }

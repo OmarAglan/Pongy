@@ -1,2 +1,30 @@
 /cmake-build-debug/
 /.idea/
+/build/
+
+# Node modules
+node_modules/
+
+# Log files
+*.log
+*.tmp
+
+# macOS specific files
+.DS_Store
+
+# Environment variables
+.env
+
+# Compiled files
+*.class
+*.o
+*.exe
+*.out
+*.bin
+
+# Debugging files
+*.pdb
+
+# Sublime Text specific files
+*.sublime-workspace
+*.sublime-project
