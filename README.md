@@ -9,11 +9,13 @@ Pongy is a minimalist implementation of the classic Pong game. It features two p
 ## Features
 
 - Two-player gameplay
-- Smooth paddle movement with physics (acceleration, deceleration)
+- Smooth paddle movement with physics (acceleration, deceleration, momentum)
 - Main menu with Start, Options, and Exit buttons
-- Proper text rendering using SDL_ttf
-- Custom window icon
-- 60 FPS gameplay
+- Proper text rendering using SDL_ttf and Open Sans font
+- Custom window icon showing paddles and ball
+- Center line divider with dashed styling
+- Blue-tinted color scheme with hover effects
+- 60 FPS gameplay with VSync for smoother animation
 - Clean and modern interface
 
 ## Requirements
@@ -91,18 +93,34 @@ After compilation, run the executable:
 
 - `src/` - Source code directory
   - `core/` - Core game mechanics
+    - `game.c/h` - Game state management
+    - `paddle.c/h` - Paddle mechanics
   - `ui/` - User interface components
+    - `menu.c/h` - Menu system
   - `utils/` - Utility functions
+    - `render.c/h` - Rendering utilities
+  - `config.h` - Game constants and configuration
+  - `types.h` - Common data structures and enums
+  - `main.c` - Main game loop and initialization
 - `assets/` - Game assets
-  - `fonts/` - Font files
+  - `fonts/` - Font files (Open Sans)
+
+## Current Development Status
+
+The game is still in development with the following features implemented:
+- Main menu system with Start, Options, and Exit buttons
+- Two-player paddle control with physics
+- Custom blue-tinted visual theme with text rendering
+- Proper game state management
 
 ## Future Improvements
 
-- Add a ball with physics
+- Add a ball with physics and collision detection
 - Implement scoring system
-- Add sound effects
+- Add sound effects for collisions and scoring
 - Add difficulty levels
-- Add single-player mode with AI
+- Add single-player mode with AI opponent
+- Add more visual effects and animations
 
 ## License
 
@@ -113,4 +131,4 @@ This project is available under the MIT License.
 - SDL3 for providing the graphics library
 - SDL3_ttf for text rendering
 - Open Sans font
-- The original Pong game for inspiration 
+- The original Pong game for inspiration
