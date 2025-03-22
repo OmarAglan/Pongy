@@ -2,26 +2,121 @@
 #include "../config.h"
 #include <string.h>
 #include <stdio.h>
+#include <SDL3/SDL.h>
+#ifdef USE_SDL_TTF
+#include "../../../SDL3/x86_64-w64-mingw32/include/SDL3_ttf/SDL_ttf.h"
+#endif
 
-// Initialize the font - stub for future TTF implementation
+#ifdef USE_SDL_TTF
+// Global font variable
+TTF_Font* g_font = NULL;
+#endif
+
+// Initialize the font system
 bool init_font(const char* font_path, int font_size) {
+#ifdef USE_SDL_TTF
+    // Initialize SDL_ttf
+    if (TTF_Init() == -1) {
+        printf("SDL_ttf could not initialize! SDL Error: %s\n", SDL_GetError());
+        return false;
+    }
+    
+    // Load font
+    g_font = TTF_OpenFont(font_path, font_size);
+    if (g_font == NULL) {
+        printf("Failed to load font %s! SDL Error: %s\n", font_path, SDL_GetError());
+        return false;
+    }
+    
+    return true;
+#else
     // SDL_ttf support is disabled
     printf("SDL_ttf support is disabled in this build.\n");
     return false;
+#endif
 }
 
-// Clean up font resources - stub for future TTF implementation
+// Clean up font resources
 void cleanup_font() {
+#ifdef USE_SDL_TTF
+    // Free the font
+    if (g_font != NULL) {
+        TTF_CloseFont(g_font);
+        g_font = NULL;
+    }
+    
+    // Quit SDL_ttf
+    TTF_Quit();
+#endif
     // Nothing to clean up when SDL_ttf is disabled
 }
 
-// Simulate text with a rectangle
+// Draw text on the screen
 void draw_text(SDL_Renderer* renderer, const char* text, SDL_FRect rect, int r, int g, int b, int a) {
-    // Calculate approximate text dimensions based on string length
+#ifdef USE_SDL_TTF
+    // If the font isn't loaded, fall back to rectangle rendering
+    if (g_font == NULL) {
+        printf("Warning: Font not initialized. Using fallback rendering.\n");
+        // Use fallback rectangle rendering
+        int text_width = (int)(strlen(text) * 10);
+        int text_height = 20;
+        
+        SDL_FRect text_rect = {
+            rect.x + (rect.w - text_width) / 2,
+            rect.y + (rect.h - text_height) / 2,
+            (float)text_width,
+            (float)text_height
+        };
+        
+        SDL_SetRenderDrawColor(renderer, r, g, b, a);
+        SDL_RenderFillRect(renderer, &text_rect);
+        return;
+    }
+    
+    // Create a surface from the text
+    SDL_Color color = {r, g, b, a};
+    // In SDL3_ttf, the function signature is different
+    size_t text_length = strlen(text);
+    SDL_Surface* text_surface = TTF_RenderText_Blended(g_font, text, text_length, color);
+    if (text_surface == NULL) {
+        printf("Unable to render text surface! SDL Error: %s\n", SDL_GetError());
+        return;
+    }
+    
+    // Create texture from surface
+    SDL_Texture* text_texture = SDL_CreateTextureFromSurface(renderer, text_surface);
+    if (text_texture == NULL) {
+        printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
+        SDL_DestroySurface(text_surface);
+        return;
+    }
+    
+    // Get the dimensions of the texture
+    int text_width = text_surface->w;
+    int text_height = text_surface->h;
+    
+    // Free the surface as it's no longer needed
+    SDL_DestroySurface(text_surface);
+    
+    // Set the destination rectangle for the text
+    // Center the text within the provided rect
+    SDL_FRect dest_rect = {
+        rect.x + (rect.w - text_width) / 2,
+        rect.y + (rect.h - text_height) / 2,
+        (float)text_width,
+        (float)text_height
+    };
+    
+    // Render the text
+    SDL_RenderTexture(renderer, text_texture, NULL, &dest_rect);
+    
+    // Free the texture
+    SDL_DestroyTexture(text_texture);
+#else
+    // Fallback rectangle-based text rendering
     int text_width = (int)(strlen(text) * 10);
     int text_height = 20;
     
-    // Create a rectangle that represents the text
     SDL_FRect text_rect = {
         rect.x + (rect.w - text_width) / 2,
         rect.y + (rect.h - text_height) / 2,
@@ -29,9 +124,9 @@ void draw_text(SDL_Renderer* renderer, const char* text, SDL_FRect rect, int r, 
         (float)text_height
     };
     
-    // Draw the text background
     SDL_SetRenderDrawColor(renderer, r, g, b, a);
     SDL_RenderFillRect(renderer, &text_rect);
+#endif
 }
 
 // Draw a dashed line in the center of the screen
@@ -80,4 +175,4 @@ SDL_Surface* create_icon() {
     SDL_FillSurfaceRect(surface, &ball, SDL_MapSurfaceRGBA(surface, 255, 255, 255, 255));
     
     return surface;
-} 
+}

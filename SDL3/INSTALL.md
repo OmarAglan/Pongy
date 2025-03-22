@@ -1,7 +1,7 @@
 
 # Using this package
 
-This package contains SDL built for the mingw-w64 toolchain.
+This package contains SDL3 built for the mingw-w64 toolchain.
 
 The files for 32-bit architecture are in i686-w64-mingw32
 The files for 64-bit architecture are in x86_64-w64-mingw32

@@ -7,6 +7,7 @@
 #include "core/game.h"
 #include "ui/menu.h"
 #include "core/paddle.h"
+#include "core/ball.h"
 #include "utils/render.h"
 
 // Font file path - adjust this to the location of your font file
@@ -54,7 +55,9 @@ int main(int argc, char* argv[]) {
     
     // Initialize game objects
     Paddle player1, player2;
-    init_game(&player1, &player2);
+    Ball ball;
+    Score score;
+    init_game(&player1, &player2, &ball, &score);
 
     // Create menu buttons
     Button menu_buttons[3];
@@ -82,7 +85,7 @@ int main(int argc, char* argv[]) {
         running = handle_events(&event, &current_state, &mouse_x, &mouse_y, &mouse_clicked);
 
         // Update game state
-        update_game_state(&current_state, menu_buttons, 3, &player1, &player2, mouse_x, mouse_y, mouse_clicked);
+        update_game_state(&current_state, menu_buttons, 3, &player1, &player2, &ball, &score, mouse_x, mouse_y, mouse_clicked);
         
         // Check if user wants to exit
         if (current_state == STATE_EXIT) {
@@ -90,7 +93,7 @@ int main(int argc, char* argv[]) {
         }
 
         // Render game
-        render_game(renderer, current_state, menu_buttons, 3, player1, player2);
+        render_game(renderer, current_state, menu_buttons, 3, player1, player2, ball, score);
 
         // Cap frame rate
         Uint64 frame_time = SDL_GetTicks() - frame_start;
@@ -106,4 +109,4 @@ int main(int argc, char* argv[]) {
     SDL_Quit();
 
     return 0;
-} 
+}

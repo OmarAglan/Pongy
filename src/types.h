@@ -23,4 +23,4 @@ typedef struct {
     bool hovered;
 } Button;
 
-#endif // TYPES_H 
+#endif // TYPES_H

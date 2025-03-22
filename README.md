@@ -4,12 +4,16 @@ A simple Pong-like game implemented in C using SDL3.
 
 ## Description
 
-Pongy is a minimalist implementation of the classic Pong game. It features two paddles that can be controlled by keyboard inputs, allowing two players to compete against each other. The game includes a main menu system and proper text rendering.
+Pongy is a minimalist implementation of the classic Pong game. It features two paddles that can be controlled by keyboard inputs, allowing two players to compete against each other. The game includes a main menu system, realistic ball physics, scoring, and proper text rendering.
 
 ## Features
 
 - Two-player gameplay
 - Smooth paddle movement with physics (acceleration, deceleration, momentum)
+- Realistic ball physics with dynamic bouncing angles
+- Progressive difficulty (ball speeds up with each hit)
+- Scoring system with scoreboard display
+- Ball bounces affected by paddle hit position and movement
 - Main menu with Start, Options, and Exit buttons
 - Proper text rendering using SDL_ttf and Open Sans font
 - Custom window icon showing paddles and ball
@@ -95,6 +99,7 @@ After compilation, run the executable:
   - `core/` - Core game mechanics
     - `game.c/h` - Game state management
     - `paddle.c/h` - Paddle mechanics
+    - `ball.c/h` - Ball physics and collision
   - `ui/` - User interface components
     - `menu.c/h` - Menu system
   - `utils/` - Utility functions
@@ -107,20 +112,25 @@ After compilation, run the executable:
 
 ## Current Development Status
 
-The game is still in development with the following features implemented:
+The game is currently at version 0.9.0 with the following features implemented:
 - Main menu system with Start, Options, and Exit buttons
+- Proper text rendering using SDL_ttf
 - Two-player paddle control with physics
-- Custom blue-tinted visual theme with text rendering
+- Ball physics with realistic bouncing and collisions
+- Scoring system with on-screen display
+- Dynamic difficulty (ball speeds up during gameplay)
+- Custom blue-tinted visual theme
 - Proper game state management
 
 ## Future Improvements
 
-- Add a ball with physics and collision detection
-- Implement scoring system
-- Add sound effects for collisions and scoring
-- Add difficulty levels
-- Add single-player mode with AI opponent
-- Add more visual effects and animations
+- Add sound effects for collisions and scoring using SDL_mixer
+- Implement AI opponent for single-player mode
+- Add power-ups and special gameplay modifiers
+- Create additional game modes (challenge mode, time trial)
+- Add win conditions and match tracking
+- Enhance visuals with particle effects and animations
+- Add settings menu for customization options
 
 ## License
 
